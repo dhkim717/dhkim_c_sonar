@@ -4,7 +4,7 @@
 #include <stdlib.h>
 
 static void print_error_exit(const char *msg) {
-    // 교육용: 종료 대신 메시지만 출력
+    // testing: print message instead of termination 
     fprintf(stderr, "%s", msg);
 }
 
@@ -12,10 +12,10 @@ void run_case_safe(const char *label, const char *src, size_t dest_size) {
     char *dest = malloc(dest_size);
     if (!dest) return;
 
-    // --- 요청한 조각 그대로 ---
-    dest[dest_size - 1] = 0;                 // 센티널
-    strncpy(dest, src, dest_size-1);           // 복사
-    if (dest[dest_size - 1] != 0) {          // NUL 미종단 감지
+    // --- case study 4 for more safe---
+    dest[dest_size - 1] = 0;                 // senti
+    strncpy(dest, src, dest_size-1);           // copy
+    if (dest[dest_size - 1] != 0) {          // NUL detection
         print_error_exit("Problem found ....\n");
     }
     else{
@@ -24,7 +24,7 @@ void run_case_safe(const char *label, const char *src, size_t dest_size) {
     }
     // ----------------------------
 
-    // 보기용 출력
+    // print
     printf("[%s] dest_size=%zu, src=\"%s\"\n", label, dest_size, src);
     printf(" last byte = %d (0이면 NUL), dest preview = \"", (unsigned char)dest[dest_size-1]);
     for (size_t i = 0; i < dest_size; ++i) {
@@ -41,10 +41,10 @@ void run_case_not_safe(const char *label, const char *src, size_t dest_size) {
     char *dest = malloc(dest_size);
     if (!dest) return;
 
-    // --- 요청한 조각 그대로 ---
-    dest[dest_size - 1] = 0;                 // 센티널
-    strncpy(dest, src, dest_size);           // 복사
-    if (dest[dest_size - 1] != 0) {          // NUL 미종단 감지
+    // --- case study 4 ---
+    dest[dest_size - 1] = 0;                 // sentinel
+    strncpy(dest, src, dest_size);           // copy
+    if (dest[dest_size - 1] != 0) {          // NUL detection
         print_error_exit("Problem found ....\n");
     }
     else{
@@ -53,7 +53,7 @@ void run_case_not_safe(const char *label, const char *src, size_t dest_size) {
     }
     // ----------------------------
 
-    // 보기용 출력
+    // print
     printf("[%s] dest_size=%zu, src=\"%s\"\n", label, dest_size, src);
     printf(" last byte = %d (0이면 NUL), dest preview = \"", (unsigned char)dest[dest_size-1]);
     for (size_t i = 0; i < dest_size; ++i) {
@@ -67,16 +67,16 @@ void run_case_not_safe(const char *label, const char *src, size_t dest_size) {
 }
 
 int main(void) {
-    // 케이스 1: 짧은 입력 → 안전(마지막 바이트 0 그대로 유지)
+    // Case 1: short input → safe(last byte 0)
     run_case_safe("short", "hi", 8);
 
-    // 케이스 2: 긴 입력 → 잘림 가능성, 마지막 바이트가 0이 아닐 수 있음(문제 신호)
+    // Case 2: long input → possible truncation, last byte may not be 0 
     run_case_safe("long", "abcdefghijklmnop", 8);
 
-    // 케이스 1: 짧은 입력 → 안전(마지막 바이트 0 그대로 유지)
+    // Case 1: short input → safe(last byte 0)
     run_case_not_safe("short", "hi", 8);
 
-    // 케이스 2: 긴 입력 → 잘림 가능성, 마지막 바이트가 0이 아닐 수 있음(문제 신호)
+    // Case 2: long input → possible truncation, last byte may not be 0 
     run_case_not_safe("long", "abcdefghijklmnop", 8);
     return 0;
 }
