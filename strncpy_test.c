@@ -43,7 +43,7 @@ void run_case_safe2(const char *label, const char *src, size_t dest_size) {
 
     // --- case study 4 for more safe---
     strncpy(dest, src, dest_size-1);           // copy
-    dest[dest_size - 1] = 0;                 // senti
+    dest[dest_size - 1] = '\0';                 // senti
     if (dest[dest_size - 1] != 0) {          // NUL detection
         print_error_exit("Problem found ....\n");
     }
